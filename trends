@@ -1,0 +1,53 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def plot_sales_with_aligned_means_as(df, date_col='WeekStartDate', control_col='Control', test_col='Test'):
+    """
+    Plots the Control and Test sales with aligned means.
+    
+    Parameters:
+    - df: DataFrame containing the sales data.
+    - date_col: Column name for the date (default is 'WeekStartDate').
+    - control_col: Column name for the control sales (default is 'Control').
+    - test_col: Column name for the test sales (default is 'Test').
+    """
+    # Convert 'WeekStartDate' to datetime if needed
+    df[date_col] = pd.to_datetime(df[date_col])
+
+    # Calculate the means of Control and Test
+    control_mean = df[control_col].mean()
+    test_mean = df[test_col].mean()
+
+    # Calculate the shift needed to align the means
+    mean_difference = control_mean - test_mean
+
+    # Adjust the Test series by adding the mean difference to align means
+    df['Adjusted_Test'] = df[test_col] + mean_difference
+
+    # Plot Sales
+    plt.figure(figsize=(10, 6))
+
+    # Plot original 'Control' and 'Test' columns
+    plt.plot(df[date_col], df[control_col], label='Control (Original)', color='blue')
+    plt.plot(df[date_col], df[test_col], label='Test (Original)', color='orange')
+
+    # Plot the adjusted Test series to align means
+    plt.plot(df[date_col], df['Adjusted_Test'], label='Test (Aligned to Control)', color='green', linestyle='--')
+
+    # Add labels and title
+    plt.xlabel('Week Start Date')
+    plt.ylabel('AVG Weekly Sales')
+    plt.title('Merch Sales Control vs Test with Aligned Means')
+
+    # Adjust legend to avoid overlap
+    plt.legend(loc='upper left')
+
+    # Rotate x-axis labels if needed
+    plt.xticks(rotation=45)
+
+    # Show plot
+    plt.tight_layout()
+    plt.show()
+
+# Example of how to use the function with a DataFrame
+# plot_sales_with_aligned_means(weekly_sales_df)
