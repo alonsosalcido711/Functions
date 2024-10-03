@@ -1,7 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def trendlines_with_aligned_means(df, date_col='WeekStartDate', control_col='Control', test_col='Test'):
+## Function 1
+def trendlines_and_test_aligned(df, date_col='WeekStartDate', control_col='Control', test_col='Test'):
     """
     Plots the Control and Test sales with aligned means.
     
@@ -48,6 +49,63 @@ def trendlines_with_aligned_means(df, date_col='WeekStartDate', control_col='Con
     # Show plot
     plt.tight_layout()
     plt.show()
+
+
+## Function 2
+def plot_sales_with_secondary_axis(df, control_col='Control', test_col='Test', date_col='WeekStartDate'):
+    """
+    Plots control and test sales data with a secondary y-axis for better visualization.
+    
+    Parameters:
+    df (pd.DataFrame): The DataFrame containing the sales data.
+    control_col (str): The name of the column representing control sales.
+    test_col (str): The name of the column representing test sales.
+    date_col (str): The name of the column representing the date (should be in a datetime format).
+    """
+    # Convert 'WeekStartDate' to datetime if not already done
+    df[date_col] = pd.to_datetime(df[date_col])
+
+    # Calculate means (optional, depending on future needs)
+    control_mean = df[control_col].mean()
+    test_mean = df[test_col].mean()
+
+    # Plot Sales with secondary y-axis
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+
+    # Plot Control on primary y-axis
+    ax1.plot(df[date_col], df[control_col], label='Control', color='blue')
+    ax1.set_xlabel('Week Start Date')
+    ax1.set_ylabel('AVG Weekly Sales (Control)', color='blue')
+    ax1.tick_params(axis='y')
+
+    # Create secondary y-axis for actual Test values
+    ax2 = ax1.twinx()
+
+    # Plot the actual Test values on the secondary y-axis
+    ax2.plot(df[date_col], df[test_col], label='Test (Actual)', color='green')
+
+    # Aligning the axes
+    # Set the y-limits for the secondary axis based on actual Test values
+    ax2.set_ylim(df[test_col].min() - 10, df[test_col].max() + 10)
+
+    # Labeling for secondary y-axis
+    ax2.set_ylabel('AVG Weekly Sales (Test)', color='green')
+    ax2.tick_params(axis='y')
+
+    # Title and legend
+    plt.title('Merch Sales: Control vs Test')
+    fig.legend(loc="upper left", bbox_to_anchor=(0.1, 0.9))
+
+    # Rotate x-axis labels if needed
+    plt.xticks(rotation=45)
+
+    # Show plot
+    plt.tight_layout()
+    plt.show()
+
+# Example usage:
+# plot_sales_with_secondary_axis(weekly_sales_df)
+
 
 # Example of how to use the function with a DataFrame
 # plot_sales_with_aligned_means(weekly_sales_df)
