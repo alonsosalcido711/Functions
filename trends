@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def plot_sales_with_aligned_means_as(df, date_col='WeekStartDate', control_col='Control', test_col='Test'):
+def trendlines_with_aligned_means(df, date_col='WeekStartDate', control_col='Control', test_col='Test'):
     """
     Plots the Control and Test sales with aligned means.
     
